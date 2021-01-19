@@ -41,15 +41,20 @@ public class TrackedImage : MonoBehaviour
     private Toggle toggle3;
     private Toggle toggle33;
 
-   
-  /*
-   void Start()
-    {
+    [SerializeField]
+    private GameObject aparecer;
+    [SerializeField]
+    private GameObject desaparecer;
+    [SerializeField]
+    private GameObject painel;
 
-       GameObject.Find("Painel").SetActive(false);
-     GameObject.Find("ButtonHelp").SetActive(true);
+
+    void Start()
+    {
+        aparecer.SetActive(true);
+        desaparecer.SetActive(false);
+        painel.SetActive(false); 
     }
-  */
 
 
     private void Awake()
@@ -219,20 +224,23 @@ public class TrackedImage : MonoBehaviour
             }
         }
     }
-/*
+
     public void ClosePanel()
     {
-        GameObject.Find("Painel").SetActive(false);
-        GameObject.Find("ButtonHelp").SetActive(true);
+        aparecer.SetActive(true);
+        desaparecer.SetActive(false);
+        painel.SetActive(false); 
     }
 
     public void openPanel()
     {
-        GameObject.Find("Painel").SetActive(true) ;
-        GameObject.Find("ButtonHelp").SetActive(false); 
+        aparecer.SetActive(false);
+        desaparecer.SetActive(true);
+        painel.SetActive(true); 
+
     }
 
-    */
+    
 }
 
 
