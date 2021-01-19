@@ -16,16 +16,6 @@ MonoBehaviour:
   m_GuidHigh: 6549872480904141238
   m_Images:
   - m_SerializedGuid:
-      m_GuidLow: 5107835537620003732
-      m_GuidHigh: 9960319395511274934
-    m_SerializedTextureGuid:
-      m_GuidLow: 19189385212275070
-      m_GuidHigh: 680366542123407819
-    m_Size: {x: 0.23, y: 0.23}
-    m_SpecifySize: 1
-    m_Name: Pink
-    m_Texture: {fileID: 0}
-  - m_SerializedGuid:
       m_GuidLow: 4855160352342297768
       m_GuidHigh: 14866786802584450206
     m_SerializedTextureGuid:
@@ -34,4 +24,14 @@ MonoBehaviour:
     m_Size: {x: 0, y: 0}
     m_SpecifySize: 0
     m_Name: Blue
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4800917669526555241
+      m_GuidHigh: 10942123524389378198
+    m_SerializedTextureGuid:
+      m_GuidLow: 9629946779164070409
+      m_GuidHigh: 15037117934619986315
+    m_Size: {x: 0, y: 0}
+    m_SpecifySize: 0
+    m_Name: Pink
     m_Texture: {fileID: 0}

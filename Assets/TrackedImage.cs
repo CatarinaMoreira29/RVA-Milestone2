@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using static System.Net.Mime.MediaTypeNames;
+
 
 
 [RequireComponent(typeof(ARTrackedImageManager))]
@@ -18,10 +19,44 @@ public class TrackedImage : MonoBehaviour
     private ARTrackedImageManager trackedImageManager;
 
 
+    [SerializeField]
+    private Text imageTrackedText;
+
+    [SerializeField]
+    private Text lista;
+
+    [SerializeField]
+    private Text tarefa1;
+
+    [SerializeField]
+    private Text tarefa2;
+
+    [SerializeField]
+    private Text tarefa3;
+
+    private Toggle toggle1;
+    private Toggle toggle11;
+    private Toggle toggle2;
+    private Toggle toggle22;
+    private Toggle toggle3;
+    private Toggle toggle33;
+
+   
+  /*
+   void Start()
+    {
+
+       GameObject.Find("Painel").SetActive(false);
+     GameObject.Find("ButtonHelp").SetActive(true);
+    }
+  */
+
+
     private void Awake()
     {
         trackedImageManager = GetComponent<ARTrackedImageManager>();
         instanciatePrefab = new Dictionary<string, GameObject>();
+
     }
 
     private void OnEnable()
@@ -38,6 +73,7 @@ public class TrackedImage : MonoBehaviour
     {
         foreach (ARTrackedImage addedImage in eventArgs.added)
         {
+            imageTrackedText.text = addedImage.referenceImage.name;
             InstantiateGameObject(addedImage);
         }
 
@@ -88,6 +124,36 @@ public class TrackedImage : MonoBehaviour
                 prefab.transform.position = updatedImage.transform.position;
                 prefab.transform.rotation = updatedImage.transform.rotation;
                 prefab.SetActive(true);
+
+
+                imageTrackedText.text = updatedImage.referenceImage.name;
+
+              
+                if (updatedImage.referenceImage.name == "Blue")
+                {
+                    lista.enabled = true;
+                    lista.text = "Lista Posto 2";
+                    tarefa1.text = "Adicionar pernas";
+                    tarefa2.text = "Adicionar vidro";
+                    tarefa3.text = "Pintar";
+
+                    toggle11.enabled = false;
+                    toggle22.enabled = false;
+                    toggle33.enabled = false; 
+                }
+                if (updatedImage.referenceImage.name == "Pink")
+                {
+                    lista.enabled = true;
+                    lista.text = "Lista Posto 4";
+                    tarefa1.text = "Ir buscar papel de embrulho";
+                    tarefa2.text = "Ir buscar tesoura";
+                    tarefa3.text = "Ir buscar tesoura e Embrulhar";
+
+                    toggle1.enabled = false;
+                    toggle2.enabled = false;
+                    toggle3.enabled = false;
+                }
+              
             }
         }
     }
@@ -103,6 +169,24 @@ public class TrackedImage : MonoBehaviour
                     prefab.transform.position = updatedImage.transform.position;
                     prefab.transform.rotation = updatedImage.transform.rotation;
                     prefab.SetActive(true);
+                   
+                    if (updatedImage.referenceImage.name == "Blue")
+                    {
+                        lista.enabled = true;
+                        lista.text = "Lista Posto 2";
+                        tarefa1.text = "Tarefa 1";
+                        tarefa2.text = "Tarefa 2";
+                        tarefa3.text = "Tarefa 3";
+                    }
+                    if (updatedImage.referenceImage.name == "Pink")
+                    {
+                        lista.enabled = true;
+                        lista.text = "Lista Posto 4";
+                        tarefa1.text = "Ir buscar papel de embrulho";
+                        tarefa2.text = "Ir buscar tesoura";
+                        tarefa3.text = "Ir buscar tesoura e Embrulhar";
+                    }
+                   
                 }
                 else
                 {
@@ -135,7 +219,22 @@ public class TrackedImage : MonoBehaviour
             }
         }
     }
+/*
+    public void ClosePanel()
+    {
+        GameObject.Find("Painel").SetActive(false);
+        GameObject.Find("ButtonHelp").SetActive(true);
+    }
+
+    public void openPanel()
+    {
+        GameObject.Find("Painel").SetActive(true) ;
+        GameObject.Find("ButtonHelp").SetActive(false); 
+    }
+
+    */
 }
+
 
 [System.Serializable]
 public struct TrackedPrefab
