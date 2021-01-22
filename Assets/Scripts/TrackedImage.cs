@@ -64,6 +64,28 @@ public class TrackedImage : MonoBehaviour
 
     public string firstStage;
 
+    /*****************************************************/
+
+
+    Ray ray;
+    RaycastHit hit;
+
+
+
+    [SerializeField]
+    private UnityEngine.UI.Text choque;
+
+
+   // [SerializeField]
+   // private UnityEngine.UI.Text arm;
+
+  //  [SerializeField]
+   // private UnityEngine.UI.Text armClone;
+
+    //[SerializeField]
+   // public GameObject prefab2;
+
+
 
     public Camera MainCamera
     {
@@ -186,6 +208,64 @@ public class TrackedImage : MonoBehaviour
             }
             uploadAnotherCloudAnchor();
         }
+
+
+        if (Input.touchCount > 0 || Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+
+
+            //Converter a posição para array 
+            ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+
+            Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red);
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+
+
+                if (hit.transform.gameObject.name == "Pink(Clone)")
+
+                {
+                    choque.text = hit.transform.gameObject.name;
+
+
+
+                    //armClone.text = GameObject.Find("Arm").name;
+
+
+                    //GameObject.Find("Arm").GetComponent<SkinnedMeshRenderer>().enabled = false;
+
+                    //  Instantiate(prefab2, hit.transform.gameObject.transform.position, Quaternion.identity);
+                    // Destroy(hit.transform.gameObject);
+
+
+
+
+                    //GameObject.Find("Arm").GetComponent<SkinnedMeshRenderer>().enabled = false;
+
+
+                    // GameObject prefab1 = hit.transform.gameObject;
+                    // var prefabRenderer = prefab1.GetComponent<Renderer>();
+                    // prefabRenderer.material.color = Color.white;
+
+
+
+
+                   //hit.transform.gameObject.GetComponent<Renderer>().material.color = Color.white;
+
+                    GameObject.Find("Arm").GetComponent<MeshRenderer>().enabled = false;
+                    //GameObject.Find("nute").GetComponent<MeshRenderer>().enabled = false;
+                    //GameObject.Find("win-frem").GetComponent<MeshRenderer>().enabled = false;
+                    //GameObject.Find("win.001").GetComponent<MeshRenderer>().enabled = false; 
+
+
+                }
+
+
+
+            }
+        }
+
     }
     private void uploadAnotherCloudAnchor()
     {
