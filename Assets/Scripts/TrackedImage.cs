@@ -3,6 +3,7 @@ using Google.XR.ARCoreExtensions.Samples.PersistentCloudAnchors;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -50,6 +51,17 @@ public class TrackedImage : MonoBehaviour
     [SerializeField]
     private GameObject painel;
 
+    [SerializeField]
+    private GameObject painelTools;
+    [SerializeField]
+    private Button sprayButton;
+    [SerializeField]
+    private GameObject buttonTools;
+    [SerializeField]
+    private Button bodyButton;
+    [SerializeField]
+    private Button glassButton;
+
     /**************************************************************
     ************************************************************
     *********************************************************/
@@ -62,7 +74,9 @@ public class TrackedImage : MonoBehaviour
     public ARPlaneManager PlaneManager;
     public ARRaycastManager RaycastManager;
 
-    public string firstStage;
+    public Text armClone;
+
+    public GameObject secondStageObject;
 
     /*****************************************************/
 
@@ -74,18 +88,6 @@ public class TrackedImage : MonoBehaviour
 
     [SerializeField]
     private UnityEngine.UI.Text choque;
-
-
-   // [SerializeField]
-   // private UnityEngine.UI.Text arm;
-
-  //  [SerializeField]
-   // private UnityEngine.UI.Text armClone;
-
-    //[SerializeField]
-   // public GameObject prefab2;
-
-
 
     public Camera MainCamera
     {
@@ -102,7 +104,6 @@ public class TrackedImage : MonoBehaviour
 
     [Header("Postion Elements")]
     public GameObject object1;
-    public GameObject object2;
     public GameObject placementIndicator;
 
     public GameObject MapQualityIndicatorPrefab;
@@ -114,7 +115,7 @@ public class TrackedImage : MonoBehaviour
     private CloudObjectStatus cloudAnchorStatus;
 
     private Pose pose;
-    private GameObject objectPalced;
+    private GameObject objectPlaced;
     private ARAnchor _anchor = null;
     private ARCloudAnchor _cloudAnchor;
 
@@ -152,7 +153,8 @@ public class TrackedImage : MonoBehaviour
         aparecer.SetActive(true);
         desaparecer.SetActive(false);
         painel.SetActive(false);
-        firstStage = "Desocupada";
+        painelTools.SetActive(false);
+        buttonTools.SetActive(false);
     }
 
 
@@ -168,12 +170,7 @@ public class TrackedImage : MonoBehaviour
 
     void Update()
     {
-       /* if (cloudAnchorStatus == CloudObjectStatus.NOT_PLACED)
-        {
-
-            placeObject();
-        }
-        else*/ if (cloudAnchorStatus == CloudObjectStatus.PLACED)
+        if (cloudAnchorStatus == CloudObjectStatus.PLACED)
         {
             updateMapQuality();
             Debug.Log("Object Placed");
@@ -183,8 +180,6 @@ public class TrackedImage : MonoBehaviour
         else if (cloudAnchorStatus == CloudObjectStatus.QUALITY_CHECKED)
         {
             feddback.text = "Uploading!!!!!!";
-
-
 
             checkUploadStatus();
         }
@@ -196,10 +191,10 @@ public class TrackedImage : MonoBehaviour
         else if (cloudAnchorStatus == CloudObjectStatus.ERROR)
         {
             Debug.Log("Error hosting cloud Anchor");
-            if (objectPalced != null)
+            if (objectPlaced != null)
             {
-                Destroy(objectPalced);
-                objectPalced = null;
+                Destroy(objectPlaced);
+                objectPlaced = null;
             }
             if (_cloudAnchor != null)
             {
@@ -227,37 +222,6 @@ public class TrackedImage : MonoBehaviour
 
                 {
                     choque.text = hit.transform.gameObject.name;
-
-
-
-                    //armClone.text = GameObject.Find("Arm").name;
-
-
-                    //GameObject.Find("Arm").GetComponent<SkinnedMeshRenderer>().enabled = false;
-
-                    //  Instantiate(prefab2, hit.transform.gameObject.transform.position, Quaternion.identity);
-                    // Destroy(hit.transform.gameObject);
-
-
-
-
-                    //GameObject.Find("Arm").GetComponent<SkinnedMeshRenderer>().enabled = false;
-
-
-                    // GameObject prefab1 = hit.transform.gameObject;
-                    // var prefabRenderer = prefab1.GetComponent<Renderer>();
-                    // prefabRenderer.material.color = Color.white;
-
-
-
-
-                   //hit.transform.gameObject.GetComponent<Renderer>().material.color = Color.white;
-
-                    GameObject.Find("Arm").GetComponent<MeshRenderer>().enabled = false;
-                    //GameObject.Find("nute").GetComponent<MeshRenderer>().enabled = false;
-                    //GameObject.Find("win-frem").GetComponent<MeshRenderer>().enabled = false;
-                    //GameObject.Find("win.001").GetComponent<MeshRenderer>().enabled = false; 
-
 
                 }
 
@@ -322,75 +286,57 @@ public class TrackedImage : MonoBehaviour
 
     private void OnTrackedImageChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
+
         foreach (ARTrackedImage addedImage in eventArgs.added)
         {
-            feddback.text = " "+firstStage+" e " +addedImage.referenceImage.name+" \n\n  " + feddback.text;
+              imageTrackedText.text = addedImage.referenceImage.name;
 
-            GameObject tempObject;
-         //   if (firstStage == "Desocupada" && addedImage.referenceImage.name == "Blue")
-          //  {
-                feddback.text = "Vai desenhar a cloud";
-                imageTrackedText.text = addedImage.referenceImage.name;
-                //InstantiateGameObject(addedImage);
-                if (addedImage.referenceImage.name == "Blue")
-                {
-                    tempObject = object1;
-                }
-                else
-                {
-                 //   Destroy(_anchor);
-                   // _anchor = null;
-                    tempObject = object2;
-                  // cloudAnchorStatus = CloudObjectStatus.NOT_PLACED;
-                }
-                feddback.text = "vai por a imagem: " + tempObject;
-                placeObject(tempObject);
-                cloudAnchorStatus = CloudObjectStatus.PLACED;
-                firstStage = "Ocupada";
-                feddback.text = "Mudou o estado para ocupada";
-
-                // PerformHitTest(Input.GetTouch(0).position);
-           // }
-          /*  else{ if (firstStage == "Ocupada" && addedImage.referenceImage.name == "Pink")
-                {
-                    feddback.text = "Vai destruir uma e desenhar a outra";
-
-                    Destroy(_cloudAnchor);
-                    _cloudAnchor = null;
-                    //tempObject = object2;
-                    //placeObject(tempObject);
-                    //cloudAnchorStatus = CloudObjectStatus.PLACED;
-                    //firstStage = "Desocupada";
-                }
-
-            }*/
-
-        }
-
-        /*foreach (ARTrackedImage updatedImage in eventArgs.updated)
-        {
-            if (updatedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking)
+            //InstantiateGameObject(addedImage);
+            if (addedImage.referenceImage.name == "Blue")
             {
-                UpdateTrackingGameObject(updatedImage);
-            }
-            else if (updatedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Limited)
-            {
-                UpdateLimitedGameObject(updatedImage);
+                placeObject(object1);
+                buttonTools.SetActive(true);
+                choque.text = "Montar o primeiro objecto";
             }
             else
             {
-                UpdateNoneGameObject(updatedImage);
-            }
-        }
+                armClone.text = "Aquiiii mario " + addedImage.referenceImage.name;
 
-        foreach (ARTrackedImage removedImage in eventArgs.removed)
-        {
-            DestroyGameObject(removedImage);
-        }*/
+                //VERIFICA SE O OBJECTO ESTA COMPLETO
+                if (GameObject.Find("Arm").GetComponent<MeshRenderer>().enabled == true
+                    && GameObject.Find("fire-nozzle").GetComponent<MeshRenderer>().enabled == true
+                    && GameObject.Find("head").GetComponent<MeshRenderer>().enabled == true
+                    && GameObject.Find("nute").GetComponent<MeshRenderer>().enabled == true
+                    && GameObject.Find("win-frem").GetComponent<MeshRenderer>().enabled == true
+                    && GameObject.Find("win.001").GetComponent<MeshRenderer>().enabled == true 
+                    && GameObject.Find("boddy").GetComponent<Renderer>().material.color == Color.white)
+                {
+                    placeObject(object1);
+                    buttonTools.SetActive(false);
+                    painelTools.SetActive(true);
+                    Invoke("createPresent", 2);
+
+                }
+                else
+                {
+                    choque.text = "Objecto nao esta completo";
+                }
+            }
+            cloudAnchorStatus = CloudObjectStatus.PLACED;
+
+        }
+    }
+
+    public void createPresent()
+    {
+
+        objectPlaced = Instantiate(secondStageObject, _anchor.transform);
     }
 
     private void placeObject(GameObject objectToPlace)
     {
+        armClone.text = "Esta na funçao placeobject";
+
         UpdatePlacementPose();
         UpdatePlacementIndicator();
         if (_anchor != null)
@@ -405,12 +351,13 @@ public class TrackedImage : MonoBehaviour
             _anchor = AnchorManager.AddAnchor(pose);
 
         }
-        feddback.text = "anchor "+_anchor;
         if (_anchor != null)
         {
             var planeType = PlaneAlignment.HorizontalUp;
             planeType = plane.alignment;
-            Instantiate(objectToPlace, _anchor.transform);
+            objectPlaced = Instantiate(objectToPlace, _anchor.transform);
+            //objectPlaced.transform.localPosition.x=20.0;
+            objectPlaced.name = "Rocket";
             // Attach map quality indicator to this anchor.
             var indicatorGO =
                 Instantiate(MapQualityIndicatorPrefab, _anchor.transform);
@@ -426,169 +373,65 @@ public class TrackedImage : MonoBehaviour
     }
 
 
-    /* private void placeObject()
-     {
-         UpdatePlacementPose();
-         UpdatePlacementIndicator();
-
-         if (placementPoseIsValid && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-         {
-             PerformHitTest(Input.GetTouch(0).position);
-             //_anchor = AnchorManager.AddAnchor(pose);
-             //objectPalced = Instantiate(objectToPlace, _anchor.transform);
-             ////_anchor = gameObject.GetComponent<ARAnchor>();
-
-
-
-             //var indicatorGO =
-             //        Instantiate(MapQualityIndicatorPrefab, _anchor.transform);
-             //_qualityIndicator = indicatorGO.GetComponent<MapQualityIndicator>();
-             //_qualityIndicator.DrawIndicator(plane.alignment, MainCamera);
-
-             cloudAnchorStatus = CloudObjectStatus.PLACED;
-         }
-     }*/
-
-
-
-    /*private void InstantiateGameObject(ARTrackedImage addedImage)
-    {
-        for (int i = 0; i < prefabToInstantiate.Length; i++)
-        {
-            if (addedImage.referenceImage.name == prefabToInstantiate[i].name)
-            {
-                GameObject prefab = Instantiate<GameObject>(prefabToInstantiate[i].prefab, transform.parent);
-                prefab.transform.position = addedImage.transform.position;
-                prefab.transform.rotation = addedImage.transform.rotation;
-
-                instanciatePrefab.Add(addedImage.referenceImage.name, prefab);
-            }
-        }
-    }*/
-
-    private void UpdateTrackingGameObject(ARTrackedImage updatedImage)
-    {
-
-        for (int i = 0; i < instanciatePrefab.Count; i++)
-        {
-            if (instanciatePrefab.TryGetValue(updatedImage.referenceImage.name, out GameObject prefab))
-            {
-                prefab.transform.position = updatedImage.transform.position;
-                prefab.transform.rotation = updatedImage.transform.rotation;
-                prefab.SetActive(true);
-
-
-                imageTrackedText.text = updatedImage.referenceImage.name;
-
-              
-                if (updatedImage.referenceImage.name == "Blue")
-                {
-                    lista.enabled = true;
-                    lista.text = "Lista Posto 2";
-                    tarefa1.text = "Adicionar pernas";
-                    tarefa2.text = "Adicionar vidro";
-                    tarefa3.text = "Pintar";
-
-                    toggle11.enabled = false;
-                    toggle22.enabled = false;
-                    toggle33.enabled = false; 
-                }
-                if (updatedImage.referenceImage.name == "Pink")
-                {
-                    lista.enabled = true;
-                    lista.text = "Lista Posto 4";
-                    tarefa1.text = "Ir buscar papel de embrulho";
-                    tarefa2.text = "Ir buscar tesoura";
-                    tarefa3.text = "Ir buscar tesoura e Embrulhar";
-
-                    toggle1.enabled = false;
-                    toggle2.enabled = false;
-                    toggle3.enabled = false;
-                }
-              
-            }
-        }
-    }
-
-    private void UpdateLimitedGameObject(ARTrackedImage updatedImage)
-    {
-        for (int i = 0; i < instanciatePrefab.Count; i++)
-        {
-            if (instanciatePrefab.TryGetValue(updatedImage.referenceImage.name, out GameObject prefab))
-            {
-                if (!prefab.GetComponent<ARTrackedImage>().destroyOnRemoval)
-                {
-                    prefab.transform.position = updatedImage.transform.position;
-                    prefab.transform.rotation = updatedImage.transform.rotation;
-                    prefab.SetActive(true);
-                   
-                    if (updatedImage.referenceImage.name == "Blue")
-                    {
-                        lista.enabled = true;
-                        lista.text = "Lista Posto 2";
-                        tarefa1.text = "Tarefa 1";
-                        tarefa2.text = "Tarefa 2";
-                        tarefa3.text = "Tarefa 3";
-                    }
-                    if (updatedImage.referenceImage.name == "Pink")
-                    {
-                        lista.enabled = true;
-                        lista.text = "Lista Posto 4";
-                        tarefa1.text = "Ir buscar papel de embrulho";
-                        tarefa2.text = "Ir buscar tesoura";
-                        tarefa3.text = "Ir buscar tesoura e Embrulhar";
-                    }
-                   
-                }
-                else
-                {
-                    prefab.SetActive(false);
-                }
-
-            }
-        }
-    }
-
-    private void UpdateNoneGameObject(ARTrackedImage updateImage)
-    {
-        for (int i = 0; i < instanciatePrefab.Count; i++)
-        {
-            if (instanciatePrefab.TryGetValue(updateImage.referenceImage.name, out GameObject prefab))
-            {
-                prefab.SetActive(false);
-            }
-        }
-    }
-
-    private void DestroyGameObject(ARTrackedImage removedImage)
-    {
-        for (int i = 0; i < instanciatePrefab.Count; i++)
-        {
-            if (instanciatePrefab.TryGetValue(removedImage.referenceImage.name, out GameObject prefab))
-            {
-                instanciatePrefab.Remove(removedImage.referenceImage.name);
-                Destroy(prefab);
-            }
-        }
-    }
-
     public void ClosePanel()
     {
         aparecer.SetActive(true);
         desaparecer.SetActive(false);
-        painel.SetActive(false); 
+        painel.SetActive(false);
     }
 
     public void openPanel()
     {
         aparecer.SetActive(false);
         desaparecer.SetActive(true);
-        painel.SetActive(true); 
+        painel.SetActive(true);
 
     }
 
+    public void ChangeColor()
+    {
+        // GameObject.Find("Rocket").GetComponent<MeshRenderer>().enabled = false;
+        //objectPlaced.GetComponent<Renderer>().material.color = Color.white;
+        sprayButton.enabled = false;
+        GameObject.Find("boddy").GetComponent<Renderer>().material.color = Color.white;
 
-  
+    }
+
+    public void addPartsOfBody()
+    {
+
+        GameObject.Find("Arm").GetComponent<MeshRenderer>().enabled = true;
+        GameObject.Find("fire-nozzle").GetComponent<MeshRenderer>().enabled = true;
+        GameObject.Find("head").GetComponent<MeshRenderer>().enabled = true;
+
+        bodyButton.enabled = false;
+    }
+
+    public void addGlass()
+    {
+
+        GameObject.Find("nute").GetComponent<MeshRenderer>().enabled = true;
+        GameObject.Find("win-frem").GetComponent<MeshRenderer>().enabled = true;
+        GameObject.Find("win.001").GetComponent<MeshRenderer>().enabled = true;
+
+        glassButton.enabled = false;
+
+    }
+
+    public void openToolsPainel()
+    {
+        if (painelTools.active == true)
+        {
+            painelTools.SetActive(false);
+        }
+        else
+        {
+            painelTools.SetActive(true);
+        }
+    }
+
+
+
 
     private void UpdatePlacementIndicator()
     {
@@ -630,7 +473,7 @@ public class TrackedImage : MonoBehaviour
         // Ideally, the pose should represent users’ expected perspectives.
         FeatureMapQuality quality =
            AnchorManager.EstimateFeatureMapQualityForHosting(GetCameraPose());
-       // feddback.text = "Current mapping quality: " + quality;
+        // feddback.text = "Current mapping quality: " + quality;
         qualityState = (int)quality;
         _qualityIndicator.UpdateQualityState(qualityState);
     }
