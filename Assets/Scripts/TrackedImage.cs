@@ -37,12 +37,8 @@ public class TrackedImage : MonoBehaviour
     [SerializeField]
     private Text tarefa3;
 
-    private Toggle toggle1;
-    private Toggle toggle11;
-    private Toggle toggle2;
-    private Toggle toggle22;
-    private Toggle toggle3;
-    private Toggle toggle33;
+
+
 
     [SerializeField]
     private GameObject aparecer;
@@ -62,6 +58,22 @@ public class TrackedImage : MonoBehaviour
     [SerializeField]
     private Button glassButton;
 
+    [SerializeField]
+    private Image checkToggle1;
+    [SerializeField]
+    private Image checkToggle2;
+    [SerializeField]
+    private Image checkToggle3;
+
+    [SerializeField]
+    private Toggle toggle1;
+
+    [SerializeField]
+    private Toggle toggle2;
+
+    [SerializeField]
+    private Toggle toggle3;
+
     /**************************************************************
     ************************************************************
     *********************************************************/
@@ -74,20 +86,16 @@ public class TrackedImage : MonoBehaviour
     public ARPlaneManager PlaneManager;
     public ARRaycastManager RaycastManager;
 
-    public Text armClone;
+    
+
+    public Text choque;
+
 
     public GameObject secondStageObject;
 
     /*****************************************************/
 
 
-    Ray ray;
-    RaycastHit hit;
-
-
-
-    [SerializeField]
-    private UnityEngine.UI.Text choque;
 
     public Camera MainCamera
     {
@@ -110,6 +118,7 @@ public class TrackedImage : MonoBehaviour
     private MapQualityIndicator _qualityIndicator = null;
 
     private ARPlane plane;
+
 
 
     private CloudObjectStatus cloudAnchorStatus;
@@ -155,6 +164,9 @@ public class TrackedImage : MonoBehaviour
         painel.SetActive(false);
         painelTools.SetActive(false);
         buttonTools.SetActive(false);
+
+
+        
     }
 
 
@@ -205,32 +217,10 @@ public class TrackedImage : MonoBehaviour
         }
 
 
-        if (Input.touchCount > 0 || Input.GetTouch(0).phase == TouchPhase.Began)
-        {
 
-
-            //Converter a posição para array 
-            ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-
-            Debug.DrawRay(ray.origin, ray.direction * 20f, Color.red);
-
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-            {
-
-
-                if (hit.transform.gameObject.name == "Pink(Clone)")
-
-                {
-                    choque.text = hit.transform.gameObject.name;
-
-                }
-
-
-
-            }
-        }
-
+    
     }
+
     private void uploadAnotherCloudAnchor()
     {
         // Restart
@@ -289,19 +279,30 @@ public class TrackedImage : MonoBehaviour
 
         foreach (ARTrackedImage addedImage in eventArgs.added)
         {
-              imageTrackedText.text = addedImage.referenceImage.name;
+
+            if (addedImage.referenceImage.name == "Blue")
+            {
+                imageTrackedText.text = "Posto de trabalho de Construção";
+                //changeTasks(addedImage.referenceImage.name);
+            }
+
+            if (addedImage.referenceImage.name == "Pink")
+            {
+                imageTrackedText.text = "Posto de trabalho de Embalamento";
+               // changeTasks(addedImage.referenceImage.name);
+            }
 
             //InstantiateGameObject(addedImage);
             if (addedImage.referenceImage.name == "Blue")
             {
                 placeObject(object1);
                 buttonTools.SetActive(true);
-                choque.text = "Montar o primeiro objecto";
+                
+                changeTasks(addedImage.referenceImage.name); 
             }
             else
             {
-                armClone.text = "Aquiiii mario " + addedImage.referenceImage.name;
-
+        
                 //VERIFICA SE O OBJECTO ESTA COMPLETO
                 if (GameObject.Find("Arm").GetComponent<MeshRenderer>().enabled == true
                     && GameObject.Find("fire-nozzle").GetComponent<MeshRenderer>().enabled == true
@@ -315,6 +316,7 @@ public class TrackedImage : MonoBehaviour
                     buttonTools.SetActive(false);
                     painelTools.SetActive(true);
                     Invoke("createPresent", 2);
+                    changeTasks(addedImage.referenceImage.name);
 
                 }
                 else
@@ -331,12 +333,48 @@ public class TrackedImage : MonoBehaviour
     {
 
         objectPlaced = Instantiate(secondStageObject, _anchor.transform);
+
+       
+    }
+
+    public void changeTasks(string trackedImage)
+    {
+        if (trackedImage == "Blue")
+        {
+            lista.enabled = true;
+            lista.text = "Posto de construção";
+            tarefa1.text = "Pintar o corpo do objeto";
+            tarefa2.text = "Adicionar as pernas ao corpo do objeto";
+            tarefa3.text = "Adicionar o vidro frontal";
+
+            checkToggle1.enabled = false;
+            checkToggle2.enabled = false;
+            checkToggle3.enabled = false;
+
+
+        }
+        if (trackedImage == "Pink")
+        {
+            lista.enabled = true;
+            lista.text = "Posto de embalamento";
+            tarefa1.text = "      ****** Posto automático ******";
+            tarefa2.text = "      Apenas tem de colocar o objeto";
+            tarefa3.text= "      o objeto no posto de trabalho";
+
+            GameObject.Find("Toggle11").SetActive(false);
+            GameObject.Find("Toggle22").SetActive(false);
+            GameObject.Find("Toggle33").SetActive(false);
+
+
+            //toggle1.enabled = false;
+            // toggle2.enabled = false;
+            //toggle3.enabled = false;
+        }
     }
 
     private void placeObject(GameObject objectToPlace)
     {
-        armClone.text = "Esta na funçao placeobject";
-
+        
         UpdatePlacementPose();
         UpdatePlacementIndicator();
         if (_anchor != null)
@@ -395,6 +433,9 @@ public class TrackedImage : MonoBehaviour
         sprayButton.enabled = false;
         GameObject.Find("boddy").GetComponent<Renderer>().material.color = Color.white;
 
+        checkToggle1.enabled = true; 
+ 
+
     }
 
     public void addPartsOfBody()
@@ -405,6 +446,9 @@ public class TrackedImage : MonoBehaviour
         GameObject.Find("head").GetComponent<MeshRenderer>().enabled = true;
 
         bodyButton.enabled = false;
+
+        checkToggle2.enabled = true;
+
     }
 
     public void addGlass()
@@ -416,6 +460,8 @@ public class TrackedImage : MonoBehaviour
 
         glassButton.enabled = false;
 
+
+        checkToggle3.enabled = true; 
     }
 
     public void openToolsPainel()

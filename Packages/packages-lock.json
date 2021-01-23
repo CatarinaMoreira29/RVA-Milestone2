@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.google.ar.core.arfoundation.extensions": {
-      "version": "file:C:/Users/mario/Downloads/arcore-unity-extensions-1.21.0.tgz",
+      "version": "file:C:/Users/acmh/Downloads/arcore-unity-extensions-1.21.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
