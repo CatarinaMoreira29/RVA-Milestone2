@@ -283,13 +283,13 @@ public class TrackedImage : MonoBehaviour
             if (addedImage.referenceImage.name == "Blue")
             {
                 imageTrackedText.text = "Posto de trabalho de Construção";
-                //changeTasks(addedImage.referenceImage.name);
+                
             }
 
             if (addedImage.referenceImage.name == "Pink")
             {
                 imageTrackedText.text = "Posto de trabalho de Embalamento";
-               // changeTasks(addedImage.referenceImage.name);
+              
             }
 
             //InstantiateGameObject(addedImage);
@@ -314,7 +314,7 @@ public class TrackedImage : MonoBehaviour
                 {
                     placeObject(object1);
                     buttonTools.SetActive(false);
-                    painelTools.SetActive(true);
+                    painelTools.SetActive(false);
                     Invoke("createPresent", 2);
                     changeTasks(addedImage.referenceImage.name);
 
@@ -322,6 +322,8 @@ public class TrackedImage : MonoBehaviour
                 else
                 {
                     choque.text = "Objecto nao esta completo";
+                    buttonTools.SetActive(false);
+                    painelTools.SetActive(false);
                 }
             }
             cloudAnchorStatus = CloudObjectStatus.PLACED;
@@ -333,7 +335,8 @@ public class TrackedImage : MonoBehaviour
     {
 
         objectPlaced = Instantiate(secondStageObject, _anchor.transform);
-
+        choque.text = "O brinquedo está completo!"; 
+       
        
     }
 
@@ -358,17 +361,13 @@ public class TrackedImage : MonoBehaviour
             lista.enabled = true;
             lista.text = "Posto de embalamento";
             tarefa1.text = "      ****** Posto automático ******";
-            tarefa2.text = "      Apenas tem de colocar o objeto";
-            tarefa3.text= "      o objeto no posto de trabalho";
+            tarefa2.text = "      Apenas tem de colocar o";
+            tarefa3.text= "     objeto no posto de trabalho";
 
             GameObject.Find("Toggle11").SetActive(false);
             GameObject.Find("Toggle22").SetActive(false);
             GameObject.Find("Toggle33").SetActive(false);
 
-
-            //toggle1.enabled = false;
-            // toggle2.enabled = false;
-            //toggle3.enabled = false;
         }
     }
 
